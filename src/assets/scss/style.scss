@@ -1,0 +1,84 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+}
+
+html, body {
+    background: #04091A;
+    height: 100%;
+    color: #FFF;
+    min-height: 100%;
+}
+
+#app {
+    margin-left: 300px;
+    background: #04091A;
+    height: 100%;
+    margin-top: 20px;
+}
+
+::-webkit-scrollbar {
+    display: none;
+    width: 0px;
+}
+  
+
+.big-button {
+    padding: 8px 20px;
+    color: #FFF;
+    text-decoration: none;
+    display: inline-block;
+    border: #FFF 3px solid;
+    border-radius: 6px;
+    font-size: 23px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+
+    &.bg {
+        background: #FFFFFF22;
+        backdrop-filter: blur(1px);
+    }
+
+    &:hover {
+        color: #04091A;
+        background: #FFF;
+
+    }
+}
+.label {
+    font-size: 17px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+.input {
+    display: block;
+    width: 100%;
+    padding: 5px 0px;
+    border: none;
+    border-bottom: 2px #FFFFFF55 solid;
+    font-size: 18px;
+    outline: none;
+    margin-bottom: 14px;
+    margin-top: 3px;
+    background: #0000;
+    color: #FFF;
+    &:focus {
+        border-bottom: 2px #4542F4 solid;
+    }
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 16px;
+    background: #4542F4;
+    color: #FFF;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+}
