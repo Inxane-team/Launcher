@@ -1,10 +1,11 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain, ipcRenderer, NativeImage, shell, Tray, Menu, Notification } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, ipcRenderer, NativeImage, shell, Tray, Menu, Notification, nativeImage } from 'electron'
 import { autoUpdater } from 'electron-updater'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { download } from './helper'
+import path from 'path'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const {exec} = require('child_process')
@@ -28,6 +29,7 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
+const icon = process.env.WEBPACK_DEV_SERVER_URL ? './public/icons/256.png' : path.join(process.resourcesPath, "256.png");
 
 let win;
 async function createWindow() {
@@ -39,7 +41,7 @@ async function createWindow() {
     frame: false,
     title: "Inxane",
     webSecurity: false,
-    icon: "./public/icons/256.png",
+    icon: icon,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -49,7 +51,7 @@ async function createWindow() {
 
   let tray = null
   app.whenReady().then(() => {
-    tray = new Tray('./public/icons/256.png')
+    tray = new Tray(icon)
     var contextMenu = Menu.buildFromTemplate([
         { label: 'Open', click:  function(){
             win.show();
@@ -74,6 +76,7 @@ async function createWindow() {
     ]);
     tray.setToolTip('Inxane Launcher')
     tray.setContextMenu(contextMenu)
+    win.tray = tray;
   })
 
   win.on('window-all-closed', function (event) {

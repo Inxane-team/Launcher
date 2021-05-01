@@ -26,6 +26,15 @@ module.exports = {
                       repo: "Launcher",
                       releaseType: 'draft'
                     }
+                ],
+                "extraFiles": [
+                    {
+                        "from": "public/icons",
+                        "to": "resources",
+                        "filter": [
+                            "**/*"
+                        ]
+                    }
                 ]
         
             },
