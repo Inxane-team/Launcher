@@ -6,7 +6,7 @@ import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { download } from './helper'
 import path from 'path'
-
+const extract = require('extract-zip')
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const {exec} = require('child_process')
 const os = require('os')
@@ -22,6 +22,7 @@ function makeDirIfNotExists(folder){
 for (const folder of [
   baseDir,
   baseDir+"/clients",
+  baseDir+"/cache"
 ])
   makeDirIfNotExists(folder)
 
@@ -160,7 +161,29 @@ async function createWindow() {
       makeDirIfNotExists(directory)
       const child = exec("cd "+directory+" && java -jar manager.jar launch", (error, stdout, stderr) => {});
       child.stdout.on('data', onStdOut)
-  }
+    } else if (arg.action == 'install-addon') {
+      const directory = baseDir+"/clients/"+arg.client.id;
+
+      win.webContents.send("asynchronous-message", { action: "start-dw", text: "DOWNLOADING Addon" })
+      
+      download(arg.addon.download_url, baseDir+"/cache/cache-"+arg.addon.name+".zip", ()=>{
+        makeDirIfNotExists(directory)
+
+        win.webContents.send("asynchronous-message", { action: "progress", progress: 100 })
+        win.webContents.send("asynchronous-message", { action: "start-dw", text: "UNZIPPING Addon" })
+      
+        extract(baseDir+"/cache/cache-"+arg.addon.name+".zip", { dir: directory })
+          .then(()=>{
+            win.webContents.send("asynchronous-message", { action: "addon-installation-done" })
+            win.webContents.send("asynchronous-message", { action: "done" })
+          })
+      }, (current, end)=>{
+        win.webContents.send("asynchronous-message", {
+          action: "progress",
+          progress: end/current*100
+        })
+      })
+    } 
   });
   
 

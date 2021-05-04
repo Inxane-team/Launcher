@@ -48,7 +48,7 @@ export default {
         display: block;
         text-align: center;
         margin-top: 17px;
-        font-size: 22px;
+        font-size: 20px;
         color: #FFF;
         width: 150px;
         font-weight: 500;

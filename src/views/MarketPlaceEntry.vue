@@ -23,14 +23,26 @@
                 <br><br><br>
                 <Modal ref="dlcEntry" :mtitle="'DLC'">
                     <div style="float: right; margin-top: 5px">
-                        <a class="big-button" style="font-size: 20px; padding: 6px 10px">{{false ? 'RE' : ''}}INSTALL</a>
+                        <a class="big-button" style="font-size: 20px; padding: 6px 10px" @click="installAddon">{{false ? 'RE' : ''}}INSTALL</a>
                     </div>
-                    <h1 style="font-size: 40px">Redesky Bug</h1>
-                    <h3 style="font-size: 30px;">DESCRIPTION</h3>
-                    <p style="font-size: 27px; max-width: 600px;">LOADING</p>
+                    <h1 style="font-size: 36px">{{currentDLC.name}}</h1>
+                    <h3 style="font-size: 30px; margin-bottom: 5px">DESCRIPTION</h3>
+                    <p style="font-size: 27px; max-width: 600px; white-space: break-spaces">{{currentDLC.description}}</p>
+                    
+                    <h3 style="font-size: 26px; margin-bottom: 12px" v-if="currentDLC.categories.length">CATEGORIES</h3>
+                    <span v-for="category of currentDLC.categories" :key="category" class="category">{{category}}</span>
+                    <br>
+                    <div style="float: right; width: 50%">
+                        <h3 style="font-size: 26px; margin-bottom: 2px">MADE BY</h3>
+                        <p style="font-size: 23px; max-width: 600px;">{{currentDLC.author}}</p>
+                    </div>
+                    <div style="width: 50%">
+                        <h3 style="font-size: 26px; margin-bottom: 2px">VERSION</h3>
+                        <p style="font-size: 23px; max-width: 600px;">{{currentDLC.version}}</p>
+                    </div>
                 </Modal>
-                <h3>DLCs</h3>
-                <DLC @click.native="$refs.dlcEntry.open()" />
+                <h3 v-if="entry.downloadable_contents.length > 0">DLCs</h3>
+                <DLC v-for="dlc of entry.downloadable_contents" :key="dlc.id" @click.native="currentDLC = dlc; $refs.dlcEntry.open()" :image="dlc.image" :name="dlc.name" />
             </div>
         </div>
     </div>
@@ -51,16 +63,23 @@ export default {
             banner: require("../assets/img/ex.png"),
             download_url: '',
             categories: [],
+            downloadable_contents: []
         },
+        currentDLC: {categories: []},
         json: { installed: false }
     }),
     mounted() {
         this.load(this.$route.params.id)
 
         electron.ipcRenderer.on("asynchronous-message", (event, data) => {
-        console.log(data);
             if (data.action == 'done') {
                 this.load(this.$route.params.id)
+            }
+        })
+
+        electron.ipcRenderer.on("asynchronous-message", (event, data) => {
+            if (data.action == 'addon-installation-done') {
+                this.$refs.dlcEntry.close()
             }
         })
     },
@@ -93,6 +112,13 @@ export default {
             electron.ipcRenderer.send('request-mainprocess-action', {
                 "action": "launch",
                 "id": this.entry.id
+            });
+        },
+        installAddon(){
+            electron.ipcRenderer.send('request-mainprocess-action', {
+                action: "install-addon",
+                addon: this.currentDLC,
+                client: this.entry
             });
         }
     }

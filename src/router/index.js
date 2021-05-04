@@ -43,4 +43,10 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  window.scrollTo(0, 0)
+  
+  next()
+})
+
 export default router
