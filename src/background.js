@@ -94,10 +94,10 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 
-  
 
   const onStdOut = function(data){
     const out = data.toString()
+    console.log("LOG:"+out);
     for (const line of out.split("\n")){
       if (line.trim().startsWith('PROGRESS:')) {
         win.webContents.send("asynchronous-message", {
@@ -145,6 +145,7 @@ async function createWindow() {
           win.webContents.send("asynchronous-message", {
             action: "done",
           })
+          
           const child = exec("cd "+directory+" && java -jar manager.jar install", (error, stdout, stderr) => {});
           child.stdout.on("data", onStdOut)
         }, (current, end)=>{

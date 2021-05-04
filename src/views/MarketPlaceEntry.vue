@@ -15,7 +15,7 @@
                 <h2>{{entry.short_description}}</h2>
                 <br>
                 <h3>DESCRIPTION</h3>
-                <h2 style="font-size: 25px; font-weight: 500">{{entry.description}}</h2>
+                <p style="font-size: 25px; font-weight: 500; white-space: break-spaces">{{entry.description}}</p>
                 
                 <br><br>
                 <span v-for="category of entry.categories" :key="category" class="category">{{category}}</span>
@@ -27,7 +27,7 @@
                     </div>
                     <h1 style="font-size: 40px">Redesky Bug</h1>
                     <h3 style="font-size: 30px;">DESCRIPTION</h3>
-                    <h2 style="font-size: 27px; max-width: 600px;">LiquidBounce is a so-called hacked client for the game Minecraft.</h2>
+                    <p style="font-size: 27px; max-width: 600px;">LOADING</p>
                 </Modal>
                 <h3>DLCs</h3>
                 <DLC @click.native="$refs.dlcEntry.open()" />
